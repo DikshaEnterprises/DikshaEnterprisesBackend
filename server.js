@@ -1,40 +1,41 @@
-// server.js
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const connectDB = require("./config/db");
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const leadFormRoutes = require('./routes/leadForm.routes');
+const careerFormRoutes = require('./routes/careerFormRoutes');
+const contactRoutes = require("./routes/contactFormRoutes");
 
 dotenv.config();
 
 const app = express();
-
-// 1) CORS: allow everything (in prod, replace '*' with your frontend URL)
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
-
-// 2) JSON body parser
 app.use(express.json());
 
-// 3) Connect to your Mongo (or whatever) database
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000',                 // For local development
+  'https://dikshaenterprises.ltd'       // Replace with actual deployed frontend URL
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
+// Connect to DB
 connectDB();
 
-// 4) Mount routes
-app.use("/api/lead-form", require("./routes/leadForm.routes"));
-app.use("/api/careerForm", require("./routes/careerFormRoutes"));
-app.use("/api/contact", require("./routes/contactFormRoutes"));
+// Routes
+app.use('/api/lead-form', leadFormRoutes);
+app.use('/api/careerForm', careerFormRoutes);
+app.use("/api/contact", contactRoutes);
 
-// 5) Health-check
-app.get("/", (req, res) => {
-  res.send("Diksha Backend is running...");
+// Fallback
+app.get('/', (req, res) => {
+  res.send('Diksha Backend is running...');
 });
 
-// 6) Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
