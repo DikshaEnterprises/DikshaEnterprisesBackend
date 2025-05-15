@@ -5,19 +5,22 @@ const connectDB = require('./config/db');
 const leadFormRoutes = require('./routes/leadForm.routes');
 const careerFormRoutes = require('./routes/careerFormRoutes');
 const contactRoutes = require('./routes/contactFormRoutes');
+const userRoutes = require('./routes/userRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// === CORS CONFIG FOR LOCAL FRONTEND ===
-const corsOptions = {
-  origin: 'http://localhost:3000', // your frontend URL during local dev
-  methods: ['GET', 'POST'],
+// const cors = require('cors');
+app.use(cors({
+  origin: 'http://127.0.0.1:3000', // ✅ No trailing slash
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
-};
-app.use(cors(corsOptions));
+}));
+
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -29,6 +32,9 @@ connectDB();
 app.use('/api/lead-form', leadFormRoutes);
 app.use('/api/careerForm', careerFormRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/payment', paymentRoutes);
+
 
 // Fallback route
 app.get('/', (req, res) => {
