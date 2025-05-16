@@ -7,8 +7,8 @@ const careerFormRoutes = require('./routes/careerFormRoutes');
 const contactRoutes = require('./routes/contactFormRoutes');
 const userRoutes = require('./routes/userRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
-
-
+const getApplicationRoutes = require('./routes/applicationRoutes');
+const referralRoutes = require('./routes/referralRoutes');
 // Load environment variables
 dotenv.config();
 
@@ -34,8 +34,8 @@ app.use('/api/careerForm', careerFormRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payment', paymentRoutes);
-
-
+app.use('/api', getApplicationRoutes);
+app.use('/api', referralRoutes);
 // Fallback route
 app.get('/', (req, res) => {
   res.send('Diksha Backend is running...');

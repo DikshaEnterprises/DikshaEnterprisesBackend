@@ -23,7 +23,7 @@ exports.createUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    const { userId } = req.query; // ✅ Use req.query to extract userId from the query string
+    const { userId } = req.query; 
 
     const user = await User.findOne({ userId });
     if (!user) return res.status(404).json({ message: "User not found" });

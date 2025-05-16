@@ -3,8 +3,8 @@ const crypto = require('crypto');
 const Application = require('../models/Application');
 
 const razorpay = new Razorpay({
-  key_id:"rzp_test_IFv0P1wWi2CvpJ",
-  key_secret:"tePk6StiauVHYTqf5MpKLmDp",
+  key_id: "rzp_test_IFv0P1wWi2CvpJ",
+  key_secret: "tePk6StiauVHYTqf5MpKLmDp",
 });
 
 exports.createOrder = async (req, res) => {
@@ -13,7 +13,7 @@ exports.createOrder = async (req, res) => {
   const options = {
     amount: amount * 100,
     currency: "INR",
-    receipt: `receipt_order_${Math.random() * 1000}`,
+    receipt: `receipt_order_${Math.floor(Math.random() * 1000000)}`,
   };
 
   try {
@@ -25,12 +25,11 @@ exports.createOrder = async (req, res) => {
 };
 
 exports.verifyPayment = async (req, res) => {
-  const {
-    formData,
+  const { 
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    amount,
+    ... formData
   } = req.body;
 
   const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -41,15 +40,24 @@ exports.verifyPayment = async (req, res) => {
     .digest("hex");
 
   if (expectedSignature === razorpay_signature) {
-    const application = new Application({
-      ...formData,
-      orderId: razorpay_order_id,
-      paymentId: razorpay_payment_id,
-      paidAmount: amount / 100,
-    });
+    try {
+      // ✅ Secure: Fetch amount from Razorpay backend
+      const order = await razorpay.orders.fetch(razorpay_order_id);
+      const amount = order.amount; // in paise
 
-    await application.save();
-    res.json({ success: true, message: "Payment Verified & Data Saved" });
+      const application = new Application({
+        ...formData,
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        paidAmount: amount / 100,
+      });
+
+      await application.save();
+      res.json({ success: true, message: "Payment Verified & Data Saved" });
+    } catch (err) {
+      console.error("Error saving application:", err);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
   } else {
     res.status(400).json({ success: false, message: "Invalid signature" });
   }
