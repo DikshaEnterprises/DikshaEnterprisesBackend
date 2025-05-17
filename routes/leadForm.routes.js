@@ -6,6 +6,6 @@ const {
 } = require('../controllers/leadForm.controller');
 
 router.post('/', submitLeadForm);
-router.get('/', getAllLeadForms);
+router.get('/getAllLeads', getAllLeadForms);
 
 module.exports = router;

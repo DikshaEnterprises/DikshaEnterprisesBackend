@@ -9,6 +9,8 @@ const userRoutes = require('./routes/userRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const getApplicationRoutes = require('./routes/applicationRoutes');
 const referralRoutes = require('./routes/referralRoutes');
+const applicationRoutes = require('./routes/applicationRoutes');
+const referralClaim = require("./routes/referralClaim");
 // Load environment variables
 dotenv.config();
 
@@ -16,7 +18,7 @@ const app = express();
 
 // const cors = require('cors');
 app.use(cors({
-  origin: 'http://127.0.0.1:3000', // ✅ No trailing slash
+    origin: ['http://127.0.0.1:3000', 'https://dikshaenterprises.ltd','http://diksha-enterprises-portal.s3-website.ap-south-1.amazonaws.com/'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -36,6 +38,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api', getApplicationRoutes);
 app.use('/api', referralRoutes);
+app.use("/api/referrals", referralClaim);
+
+// app.use('/api', applicationRoutes);
 // Fallback route
 app.get('/', (req, res) => {
   res.send('Diksha Backend is running...');

@@ -23,6 +23,11 @@ const ApplicationSchema = new mongoose.Schema({
   paymentId: String,
   orderId: String,
   userId: String,
+  applicationStatus: {
+    type: String,
+    enum: ['InProcess', 'Selected', 'Rejected','Submitted'],
+    default: 'Submitted',
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

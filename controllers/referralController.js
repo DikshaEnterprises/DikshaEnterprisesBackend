@@ -1,22 +1,22 @@
-const Application = require('../models/Application');
+const Referral = require('../models/Referral');
 
 exports.getReferralEarnings = async (req, res) => {
   const { referralCode } = req.params;
 
   try {
-    const applications = await Application.find({
-      referralCode,
-      paidAmount: { $gt: 0 }
-    });
+    const referral = await Referral.findOne({ referralCode });
 
-    const totalPaid = applications.reduce((sum, app) => sum + app.paidAmount, 0);
+    if (!referral) {
+      return res.status(404).json({ message: "Referral not found" });
+    }
+
+    const totalPaid = referral.totalAmount;
     const commission = +(totalPaid * 0.30).toFixed(2);
 
     res.json({
       referralCode,
       totalPaid,
       commission,
-      count: applications.length
     });
   } catch (error) {
     console.error("Referral earnings error:", error);
