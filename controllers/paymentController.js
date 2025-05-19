@@ -5,7 +5,7 @@ const Application = require('../models/Application');
 const Referral = require('../models/Referral');
 dotenv.config();
 const razorpay = new Razorpay({
- key_id: process.env.RAZORPAY_KEY_ID,
+  key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
@@ -61,26 +61,28 @@ exports.verifyPayment = async (req, res) => {
     console.log('Application saved:', application);
 
     // Referral processing — use trusted amount, not frontend amount
-    const { referralCode} = formData;
+    const { referralCode } = formData;
     const paidAmount = amount / 100;
 
-    if (referralCode ) {
+    if (referralCode) {
       console.log('Referral info present:', referralCode, paidAmount);
+      const referralAmount = parseFloat((paidAmount * 0.3).toFixed(2));
 
       let existingReferral = await Referral.findOne({ referralCode });
       if (existingReferral) {
-        existingReferral.totalAmount += paidAmount;
+        existingReferral.totalAmount += referralAmount;
         await existingReferral.save();
         console.log('Referral updated:', existingReferral);
       } else {
         const newReferral = new Referral({
           referralCode,
-          totalAmount: paidAmount,
+          totalAmount: referralAmount,
         });
         await newReferral.save();
         console.log('New referral saved:', newReferral);
       }
-    } else {
+    }
+    else {
       console.log('No referral info or missing fields');
     }
 

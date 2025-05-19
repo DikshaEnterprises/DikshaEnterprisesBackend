@@ -12,6 +12,7 @@ const ApplicationSchema = new mongoose.Schema({
   district: String,
   state: String,
   category: String,
+  photo:String,
   qualification: String,
   experience: String,
   aadhar: String,

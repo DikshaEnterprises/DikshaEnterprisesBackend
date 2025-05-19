@@ -11,7 +11,7 @@ exports.getReferralEarnings = async (req, res) => {
     }
 
     const totalPaid = referral.totalAmount;
-    const commission = +(totalPaid * 0.30).toFixed(2);
+    const commission = referral.totalAmount;
 
     res.json({
       referralCode,
