@@ -19,7 +19,7 @@ const app = express();
 
 // const cors = require('cors');
 app.use(cors({
-    origin: ['http://127.0.0.1:3000','http://diksha-enterprises-portal.s3-website.ap-south-1.amazonaws.com','http://dikshaenterprises.ltd.s3-website.ap-south-1.amazonaws.com','https://www.dikshaenterprises.ltd'],
+    origin: ['http://127.0.0.1:3000','http://diksha-enterprises-portal.s3-website.ap-south-1.amazonaws.com','http://dikshaenterprises.ltd.s3-website.ap-south-1.amazonaws.com','https://www.dikshaenterprises.ltd','https://diksha-portal-9rqm.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
